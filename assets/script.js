@@ -3,6 +3,34 @@ const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapseBtn');
 let sidebarExpanded = false;
 
+// Check for query parameters on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Parse URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryMessage = urlParams.get('message');
+    const chatId = urlParams.get('chat');
+    
+    // If there's a message in the query, send it automatically
+    if (queryMessage) {
+        // Make sure the chat interface is visible
+        showChatInterface();
+        // Set the message in the input field
+        const messageInput = document.getElementById('messageInput');
+        if (messageInput) {
+            messageInput.value = decodeURIComponent(queryMessage);
+            // Optional: Auto-send the message
+            setTimeout(() => {
+                document.getElementById('sendButton').click();
+            }, 500);
+        }
+    }
+    
+    // If there's a chat ID, load that specific chat
+    if (chatId) {
+        loadChat(chatId);
+    }
+});
+
 // Function to toggle sidebar
 function toggleSidebar() {
     sidebarExpanded = !sidebarExpanded;
