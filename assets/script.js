@@ -421,10 +421,49 @@ function loadExistingChat(chat) {
         messageDiv.className = `message ${msg.role === 'user' ? 'user' : 'assistant'}`;
         
         if (msg.role === 'user') {
+            // Message bubble
             const bubble = document.createElement('div');
             bubble.className = 'message-bubble';
             bubble.textContent = msg.content;
             messageDiv.appendChild(bubble);
+            
+            // Message actions
+            const actions = document.createElement('div');
+            actions.className = 'message-actions';
+            
+            // Copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'message-action-btn copy-btn';
+            copyBtn.title = 'کپی';
+            copyBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            `;
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(msg.content);
+            });
+            actions.appendChild(copyBtn);
+            
+            // Edit button
+            const editBtn = document.createElement('button');
+            editBtn.className = 'message-action-btn edit-btn';
+            editBtn.title = 'ویرایش';
+            editBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            `;
+            editBtn.addEventListener('click', () => {
+                document.getElementById('messageInput').value = msg.content;
+                document.getElementById('messageInput').focus();
+            });
+            actions.appendChild(editBtn);
+            
+            // Add actions to message div
+            messageDiv.appendChild(actions);
         } else {
             const messageText = document.createElement('div');
             messageText.className = 'message-text';
@@ -505,19 +544,15 @@ function addMessage(text, isUser = false, isLoading = false, isError = false) {
     messageDiv.className = `message ${isUser ? 'user' : 'assistant'} ${isLoading ? 'loading' : ''}`;
     
     if (isUser) {
-        // User message container
-        const messageContainer = document.createElement('div');
-        messageContainer.className = 'message-container';
-        
         // Message bubble
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
         bubble.textContent = text;
-        messageContainer.appendChild(bubble);
+        messageDiv.appendChild(bubble);
         
         // Message actions
         const actions = document.createElement('div');
-        actions.className = 'message-actions user-actions';
+        actions.className = 'message-actions';
         
         // Copy button
         const copyBtn = document.createElement('button');
@@ -546,6 +581,7 @@ function addMessage(text, isUser = false, isLoading = false, isError = false) {
                 }, 2000);
             });
         });
+        actions.appendChild(copyBtn);
         
         // Edit button
         const editBtn = document.createElement('button');
@@ -587,36 +623,41 @@ function addMessage(text, isUser = false, isLoading = false, isError = false) {
             editContainer.appendChild(editActions);
             
             bubble.style.display = 'none';
-            messageContainer.insertBefore(editContainer, bubble);
+            messageDiv.insertBefore(editContainer, bubble);
             editInput.focus();
-            
-            cancelBtn.addEventListener('click', () => {
+        });
+        actions.appendChild(editBtn);
+        
+        // Add actions to message div
+        messageDiv.appendChild(actions);
+    } else {
+        // Assistant message (existing code)
+        
+        cancelBtn.addEventListener('click', () => {
+            editContainer.remove();
+            bubble.style.display = 'block';
+        });
+        
+        saveBtn.addEventListener('click', async () => {
+            const newText = editInput.value.trim();
+            if (!newText || newText === originalText) {
                 editContainer.remove();
                 bubble.style.display = 'block';
-            });
+                return;
+            }
             
-            saveBtn.addEventListener('click', async () => {
-                const newText = editInput.value.trim();
-                if (!newText || newText === originalText) {
-                    editContainer.remove();
-                    bubble.style.display = 'block';
-                    return;
-                }
-                
-                // ذخیره تغییرات
-                bubble.textContent = newText;
-                editContainer.remove();
-                bubble.style.display = 'block';
-                
-                // ارسال پیام جدید به هوش مصنوعی
-                await sendMessage(newText);
-            });
+            // ذخیره تغییرات
+            bubble.textContent = newText;
+            editContainer.remove();
+            bubble.style.display = 'block';
+            
+            // ارسال پیام جدید به هوش مصنوعی
+            await sendMessage(newText);
         });
         
         actions.appendChild(copyBtn);
         actions.appendChild(editBtn);
-        messageContainer.appendChild(actions);
-        messageDiv.appendChild(messageContainer);
+        messageDiv.appendChild(actions);
     } else {
         // Assistant message - text on left with actions below
         const messageText = document.createElement('div');
