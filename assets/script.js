@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // If there's a chat ID, load that specific chat
     if (chatId) {
-        loadChat(chatId);
+        loadChatFromUrl();
     }
 });
 
@@ -1049,71 +1049,71 @@ const privateNotice = document.getElementById('privateNotice');
 const imageNotice = document.getElementById('imageNotice');
 const createImageBtn = document.getElementById('createImageBtn');
 
-// Image generation using Pollinations.ai (Free, no API key needed)
-// This generates actual images, not just descriptions
-
-privateBtn.addEventListener('click', () => {
-    isPrivateMode = !isPrivateMode;
-    
-    if (isPrivateMode) {
-        privateBtn.classList.add('active');
-        privateNotice.style.display = 'flex';
-        searchBox.classList.add('private-mode');
+if (privateBtn) {
+    privateBtn.addEventListener('click', () => {
+        isPrivateMode = !isPrivateMode;
         
-        // Disable image mode if active
-        if (isImageMode) {
-            isImageMode = false;
-            createImageBtn.classList.remove('active');
-            imageNotice.style.display = 'none';
-            searchBox.classList.remove('image-mode');
-            searchInput.placeholder = 'What do you want to know?';
-        }
-    } else {
-        privateBtn.classList.remove('active');
-        privateNotice.style.display = 'none';
-        searchBox.classList.remove('private-mode');
-    }
-});
-
-// Image mode toggle
-createImageBtn.addEventListener('click', () => {
-    isImageMode = !isImageMode;
-    
-    if (isImageMode) {
-        createImageBtn.classList.add('active');
-        imageNotice.style.display = 'flex';
-        searchBox.classList.add('image-mode');
-        searchInput.placeholder = 'Describe the image you want to create...';
-        
-        // Disable private mode if active
         if (isPrivateMode) {
-            isPrivateMode = false;
+            privateBtn.classList.add('active');
+            if (privateNotice) privateNotice.style.display = 'flex';
+            searchBox.classList.add('private-mode');
+            
+            // Disable image mode if active
+            if (isImageMode) {
+                isImageMode = false;
+                if (createImageBtn) createImageBtn.classList.remove('active');
+                if (imageNotice) imageNotice.style.display = 'none';
+                searchBox.classList.remove('image-mode');
+                searchInput.placeholder = 'What do you want to know?';
+            }
+        } else {
             privateBtn.classList.remove('active');
-            privateNotice.style.display = 'none';
+            if (privateNotice) privateNotice.style.display = 'none';
             searchBox.classList.remove('private-mode');
         }
+    });
+}
+
+if (createImageBtn) {
+    createImageBtn.addEventListener('click', () => {
+        isImageMode = !isImageMode;
         
-        // Hide action buttons
-        const actionButtons = document.querySelector('.action-buttons');
-        if (actionButtons) {
-            actionButtons.classList.add('hidden');
-        }
-    } else {
-        createImageBtn.classList.remove('active');
-        imageNotice.style.display = 'none';
-        searchBox.classList.remove('image-mode');
-        searchInput.placeholder = 'What do you want to know?';
-        
-        // Show action buttons if not in chat mode
-        const centerContent = document.getElementById('centerContent');
-        if (!centerContent.classList.contains('chat-mode')) {
+        if (isImageMode) {
+            createImageBtn.classList.add('active');
+            if (imageNotice) imageNotice.style.display = 'flex';
+            searchBox.classList.add('image-mode');
+            searchInput.placeholder = 'Describe the image you want to create...';
+            
+            // Disable private mode if active
+            if (isPrivateMode) {
+                isPrivateMode = false;
+                if (privateBtn) privateBtn.classList.remove('active');
+                if (privateNotice) privateNotice.style.display = 'none';
+                searchBox.classList.remove('private-mode');
+            }
+            
+            // Hide action buttons
             const actionButtons = document.querySelector('.action-buttons');
             if (actionButtons) {
-                actionButtons.classList.remove('hidden');
+                actionButtons.classList.add('hidden');
+            }
+        } else {
+            createImageBtn.classList.remove('active');
+            if (imageNotice) imageNotice.style.display = 'none';
+            searchBox.classList.remove('image-mode');
+            searchInput.placeholder = 'What do you want to know?';
+            
+            // Show action buttons if not in chat mode
+            const centerContent = document.getElementById('centerContent');
+            if (centerContent && !centerContent.classList.contains('chat-mode')) {
+                const actionButtons = document.querySelector('.action-buttons');
+                if (actionButtons) {
+                    actionButtons.classList.remove('hidden');
+                }
             }
         }
-    }
-});
+    });
+}
 
 // New chat button
 newChatBtn.addEventListener('click', () => {
@@ -1189,23 +1189,16 @@ window.addEventListener('DOMContentLoaded', () => {
 // Upgrade card animation on load
 window.addEventListener('load', () => {
     const upgradeCard = document.querySelector('.upgrade-card');
-    upgradeCard.style.opacity = '0';
-    upgradeCard.style.transform = 'translateY(20px)';
-    
-    setTimeout(() => {
-        upgradeCard.style.transition = 'all 0.5s ease';
-        upgradeCard.style.opacity = '1';
-        upgradeCard.style.transform = 'translateY(0)';
-    }, 500);
-});
-
-// Search input enter key handler
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const query = searchInput.value.trim();
-        if (query) {
-            console.log('Search query:', query);
-            // Add your search logic here
-        }
+    if (upgradeCard) {
+        upgradeCard.style.opacity = '0';
+        upgradeCard.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            upgradeCard.style.transition = 'all 0.5s ease';
+            upgradeCard.style.opacity = '1';
+            upgradeCard.style.transform = 'translateY(0)';
+        }, 500);
     }
 });
+
+// این کد حذف می‌شود چون قبلاً در بالا تعریف شده است

@@ -24,9 +24,7 @@ class VXApi {
             ];
 
             // Prepare headers for OpenRouter
-            // Use user's API key if available in localStorage, otherwise use default from config
-            const userApiKey = localStorage.getItem('vx_api_key');
-            const apiKey = userApiKey || API_CONFIG.apiKey;
+            const apiKey = API_CONFIG.apiKey;
             
             const headers = {
                 'Content-Type': 'application/json',
@@ -65,9 +63,13 @@ class VXApi {
                 
                 // Add helpful messages for common errors
                 if (response.status === 404) {
-                    errorMessage += '\n\nPossible issues:\n- Invalid model name\n- Incorrect API endpoint\n- Check your model in Settings';
+                    errorMessage = 'مدل انتخاب شده نامعتبر است. لطفاً با مدیر سیستم تماس بگیرید.';
                 } else if (response.status === 401 || response.status === 403) {
-                    errorMessage += '\n\nPossible issues:\n- Invalid API key\n- API key expired\n- Check your API key in Settings';
+                    if (!API_CONFIG.apiKey) {
+                        errorMessage = 'کلید API در فایل config.js تنظیم نشده است. لطفاً با مدیر سیستم تماس بگیرید.';
+                    } else {
+                        errorMessage = 'کلید API نامعتبر است یا منقضی شده است. لطفاً با مدیر سیستم تماس بگیرید.';
+                    }
                 }
                 
                 throw new Error(errorMessage);
