@@ -1,23 +1,27 @@
 /* Beauty Effects for VX AI Interface */
 
-/* Animated Background Gradient */
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
+/* Keep the dark theme */
 body {
     position: relative;
-    background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
-    background-size: 400% 400%;
-    animation: gradientAnimation 15s ease infinite;
+    background-color: #0a0a0a;
+}
+
+/* Meteor Animation */
+@keyframes meteor {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) translateY(100%);
+        opacity: 0;
+    }
 }
 
 /* Floating Particles */
