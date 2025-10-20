@@ -317,9 +317,8 @@ const currentModelName = document.getElementById('currentModelName');
 
 // Initialize model selector
 function initModelSelector() {
-    // Load saved model or use default
-    const savedModel = localStorage.getItem('vx_model') || API_CONFIG.model;
-    const currentModel = AI_MODELS.find(m => m.id === savedModel) || AI_MODELS[0];
+    // Use default model
+    const currentModel = AI_MODELS[0];
     currentModelName.textContent = currentModel.name;
     API_CONFIG.model = currentModel.id;
     
@@ -350,7 +349,6 @@ function selectModel(modelId) {
     
     // Update config
     API_CONFIG.model = model.id;
-    localStorage.setItem('vx_model', model.id);
     
     // Update UI
     currentModelName.textContent = model.name;

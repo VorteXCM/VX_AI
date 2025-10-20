@@ -1,5 +1,4 @@
 // API Handler for VX with OpenRouter
-
 class VXApi {
     constructor() {
         this.conversationHistory = [];
@@ -23,27 +22,21 @@ class VXApi {
                 ...this.conversationHistory
             ];
 
-            // Prepare headers for OpenRouter
-            const apiKey = API_CONFIG.apiKey;
-            
+            // Prepare headers for OpenRouter with fixed API key
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-                'HTTP-Referer': API_CONFIG.siteUrl || window.location.origin,
-                'X-Title': API_CONFIG.siteName || 'VX Chat'
+                'Authorization': `Bearer ${API_CONFIG.apiKey}`,
+                'HTTP-Referer': API_CONFIG.siteUrl,
+                'X-Title': API_CONFIG.siteName
             };
 
             // Prepare request body
             const requestBody = {
                 model: API_CONFIG.model,
                 messages: messages,
-                temperature: API_CONFIG.temperature
+                temperature: API_CONFIG.temperature,
+                stream: API_CONFIG.stream
             };
-
-            // Add stream if enabled
-            if (API_CONFIG.stream) {
-                requestBody.stream = true;
-            }
 
             // Make API request
             const response = await fetch(API_CONFIG.endpoint, {
@@ -65,11 +58,7 @@ class VXApi {
                 if (response.status === 404) {
                     errorMessage = 'مدل انتخاب شده نامعتبر است. لطفاً با مدیر سیستم تماس بگیرید.';
                 } else if (response.status === 401 || response.status === 403) {
-                    if (!API_CONFIG.apiKey) {
-                        errorMessage = 'کلید API در فایل config.js تنظیم نشده است. لطفاً با مدیر سیستم تماس بگیرید.';
-                    } else {
-                        errorMessage = 'کلید API نامعتبر است یا منقضی شده است. لطفاً با مدیر سیستم تماس بگیرید.';
-                    }
+                    errorMessage = 'خطا در ارتباط با سرور. لطفاً با مدیر سیستم تماس بگیرید.';
                 }
                 
                 throw new Error(errorMessage);

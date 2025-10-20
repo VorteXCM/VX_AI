@@ -3,10 +3,10 @@ const API_CONFIG = {
     // OpenRouter API endpoint
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
     
-    // OpenRouter API Key
-    apiKey: 'sk-or-v1-317b3fe8c3c3d6e4d3e2c3e7c0b9c7e4d3e2c3e7c0b9c7e4d3e2c3e7',  // کلید API پیش‌فرض برای همه کاربران
+    // Fixed API Key - DO NOT CHANGE
+    apiKey: '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',
     
-    // Model settings - Can be changed by model selector
+    // Model settings
     model: 'google/gemini-2.0-flash-exp:free',
     
     // Default settings
