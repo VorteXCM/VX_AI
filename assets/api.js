@@ -24,9 +24,13 @@ class VXApi {
             ];
 
             // Prepare headers for OpenRouter
+            // Use user's API key if available in localStorage, otherwise use default from config
+            const userApiKey = localStorage.getItem('vx_api_key');
+            const apiKey = userApiKey || API_CONFIG.apiKey;
+            
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_CONFIG.apiKey}`,
+                'Authorization': `Bearer ${apiKey}`,
                 'HTTP-Referer': API_CONFIG.siteUrl || window.location.origin,
                 'X-Title': API_CONFIG.siteName || 'VX Chat'
             };
