@@ -457,8 +457,11 @@ function loadExistingChat(chat) {
                 </svg>
             `;
             editBtn.addEventListener('click', () => {
-                document.getElementById('messageInput').value = msg.content;
-                document.getElementById('messageInput').focus();
+                const messageInput = document.getElementById('messageInput');
+                if (messageInput) {
+                    messageInput.value = text;
+                    messageInput.focus();
+                }
             });
             actions.appendChild(editBtn);
             
@@ -625,38 +628,33 @@ function addMessage(text, isUser = false, isLoading = false, isError = false) {
             bubble.style.display = 'none';
             messageDiv.insertBefore(editContainer, bubble);
             editInput.focus();
+            
+            // Event listeners for edit buttons
+            cancelBtn.addEventListener('click', () => {
+                editContainer.remove();
+                bubble.style.display = 'block';
+            });
+            
+            saveBtn.addEventListener('click', async () => {
+                const newText = editInput.value.trim();
+                if (!newText || newText === originalText) {
+                    editContainer.remove();
+                    bubble.style.display = 'block';
+                    return;
+                }
+                
+                // ذخیره تغییرات
+                bubble.textContent = newText;
+                editContainer.remove();
+                bubble.style.display = 'block';
+                
+                // ارسال پیام جدید به هوش مصنوعی
+                await sendMessage(newText);
+            });
         });
         actions.appendChild(editBtn);
         
         // Add actions to message div
-        messageDiv.appendChild(actions);
-    } else {
-        // Assistant message (existing code)
-        
-        cancelBtn.addEventListener('click', () => {
-            editContainer.remove();
-            bubble.style.display = 'block';
-        });
-        
-        saveBtn.addEventListener('click', async () => {
-            const newText = editInput.value.trim();
-            if (!newText || newText === originalText) {
-                editContainer.remove();
-                bubble.style.display = 'block';
-                return;
-            }
-            
-            // ذخیره تغییرات
-            bubble.textContent = newText;
-            editContainer.remove();
-            bubble.style.display = 'block';
-            
-            // ارسال پیام جدید به هوش مصنوعی
-            await sendMessage(newText);
-        });
-        
-        actions.appendChild(copyBtn);
-        actions.appendChild(editBtn);
         messageDiv.appendChild(actions);
     } else {
         // Assistant message - text on left with actions below

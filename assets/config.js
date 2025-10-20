@@ -4,7 +4,7 @@ const API_CONFIG = {
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
     
     // Fixed API Key - DO NOT CHANGE
-    apiKey: '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',
+    apiKey: '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',
     
     // Model settings
     model: 'google/gemini-2.0-flash-exp:free',

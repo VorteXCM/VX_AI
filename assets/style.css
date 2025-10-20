@@ -354,6 +354,10 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     animation: imageAppear 0.5s ease-out;
+    max-width: 80%;
+    max-height: 400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .generated-image-container:hover {
@@ -380,9 +384,12 @@ body {
     width: 100%;
     max-width: 100%;
     height: auto;
+    max-height: 320px;
+    object-fit: contain;
     display: block;
     border-radius: 16px 16px 0 0;
     transition: transform 0.3s ease;
+    background-color: #0a0a0a;
 }
 
 .generated-image-container:hover .generated-image {
@@ -415,6 +422,14 @@ body {
     text-decoration: none;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.image-action-btn:hover {
+    background: linear-gradient(145deg, #252525 0%, #1a1a1a 100%);
+    border-color: #3a3a3a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 .image-action-btn::before {
@@ -679,7 +694,7 @@ body {
     margin-right: 12px;
 }
 
-.message.user .message-container:hover .message-actions {
+.message.user:hover .message-actions {
     display: flex;
 }
 
