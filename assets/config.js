@@ -4,7 +4,7 @@ const API_CONFIG = {
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
     
     // API Key - Replace with your valid OpenRouter API key
-    apiKey: 'sk-or-v1-...',  // نیاز به جایگزینی با کلید API معتبر از OpenRouter
+    apiKey: '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',  // نیاز به جایگزینی با کلید API معتبر از OpenRouter
     
     // Model settings
     model: 'google/gemini-2.0-flash-exp:free',
