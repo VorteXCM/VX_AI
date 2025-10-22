@@ -3,6 +3,11 @@ const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapseBtn');
 let sidebarExpanded = false;
 
+// Mode flags
+let isPrivateMode = false;
+let isImageMode = false;
+// Video mode functionality has been removed
+
 // Check for query parameters on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Parse URL query parameters
@@ -304,8 +309,6 @@ const newChatBtn = document.getElementById('newChatBtn');
 const searchInput = document.querySelector('.search-input');
 const searchBox = document.querySelector('.search-box');
 let isProcessing = false;
-let isPrivateMode = false;
-let isImageMode = false;
 let typingInterval = null;
 let shouldStopTyping = false;
 
@@ -1015,7 +1018,7 @@ async function sendMessage() {
     try {
         let response;
         
-        // Check if in image mode
+        // Check if in image or video mode
         if (isImageMode) {
             // Generate actual image using Pollinations.ai
             response = await vxApi.generateImage(query);
@@ -1028,7 +1031,7 @@ async function sendMessage() {
                 const assistantMsg = addMessage('', false);
                 const messageText = assistantMsg.querySelector('.message-text');
                 
-                // Create image element with loading state
+                // Create image container with loading state
                 const imageContainer = document.createElement('div');
                 imageContainer.className = 'generated-image-container';
                 
@@ -1043,9 +1046,123 @@ async function sendMessage() {
                 messageText.appendChild(imageContainer);
                 
                 // Create image element
-                const img = new Image();
+                const img = document.createElement('img');
                 img.className = 'generated-image';
                 img.alt = `Generated image: ${response.prompt}`;
+            
+        } else if (isImageMode) {
+            // Generate image using pollinations.ai
+            response = await vxApi.generateImage(query);
+                // Add video message
+                const assistantMsg = addMessage('', false);
+                const messageText = assistantMsg.querySelector('.message-text');
+                
+                // Create video element with loading state
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'generated-image-container';
+                
+                // Create loading placeholder
+                const loadingPlaceholder = document.createElement('div');
+                loadingPlaceholder.className = 'image-loading';
+                loadingPlaceholder.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <p>Generating video...</p>
+                `;
+                videoContainer.appendChild(loadingPlaceholder);
+                messageText.appendChild(videoContainer);
+                
+                // Create video element
+                const video = document.createElement('video');
+                video.className = 'generated-image';
+                video.alt = `Generated video: ${response.prompt}`;
+                video.controls = true;
+                video.autoplay = false;
+                video.muted = true;
+                
+                // When video loads, replace loading with actual video
+                video.onloadeddata = () => {
+                    console.log('%c✅ VIDEO LOADED SUCCESSFULLY!', 'color: #22c55e; font-weight: bold; font-size: 14px;');
+                    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                    console.log('🎬 Video URL:', response.videoUrl);
+                    console.log('📝 Prompt:', response.prompt);
+                    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                    console.log('');
+                    
+                    loadingPlaceholder.remove();
+                    videoContainer.innerHTML = `
+                        <video src="${response.videoUrl}" controls class="generated-image"></video>
+                        <div class="image-actions">
+                            <a href="${response.videoUrl}" download="generated-video.mp4" class="image-action-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download
+                            </a>
+                            <button class="image-action-btn" onclick="window.open('${response.videoUrl}', '_blank')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                Open
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Save video to local storage for gallery
+                    const timestamp = new Date().getTime();
+                    const videoData = {
+                        url: response.videoUrl,
+                        prompt: response.prompt,
+                        timestamp: timestamp
+                    };
+                    
+                    // Save to appropriate storage based on private mode
+                    if (isPrivateMode) {
+                        const privateVideos = JSON.parse(localStorage.getItem('privateVideos') || '[]');
+                        privateVideos.push(videoData);
+                        localStorage.setItem('privateVideos', JSON.stringify(privateVideos));
+                    } else {
+                        const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+                        videos.push(videoData);
+                        localStorage.setItem('videos', JSON.stringify(videos));
+                    }
+                };
+                
+                // If video fails to load, show error
+                video.onerror = (error) => {
+                    console.log('%c❌ VIDEO LOADING FAILED!', 'color: #ef4444; font-weight: bold; font-size: 14px;');
+                    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                    console.error('🔴 Error Event:', error);
+                    console.log('🎬 Failed URL:', response.videoUrl);
+                    console.log('📝 Prompt:', response.prompt);
+                    
+                    loadingPlaceholder.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        <p style="color: #ef4444">Failed to load video</p>
+                        <button class="retry-btn">Retry</button>
+                    `;
+                    
+                    const retryBtn = loadingPlaceholder.querySelector('.retry-btn');
+                    if (retryBtn) {
+                        retryBtn.addEventListener('click', () => {
+                            loadingPlaceholder.innerHTML = `
+                                <div class="loading-spinner"></div>
+                                <p>Retrying video generation...</p>
+                            `;
+                            video.src = response.videoUrl + '?retry=' + new Date().getTime();
+                        });
+                    }
+                };
+                
+                // Set video source to start loading
+                video.src = response.videoUrl;
                 
                 // When image loads, replace loading with actual image
                 img.onload = () => {
@@ -1191,7 +1308,9 @@ async function sendMessage() {
 
 const privateNotice = document.getElementById('privateNotice');
 const imageNotice = document.getElementById('imageNotice');
+const videoNotice = document.getElementById('videoNotice');
 const createImageBtn = document.getElementById('createImageBtn');
+const createVideoBtn = document.getElementById('createVideoBtn');
 
 if (privateBtn) {
     privateBtn.addEventListener('click', () => {
@@ -1258,6 +1377,8 @@ if (createImageBtn) {
         }
     });
 }
+
+// Video button functionality has been removed
 
 // New chat button
 newChatBtn.addEventListener('click', () => {

@@ -45,6 +45,13 @@
                 </svg>
                 <span class="menu-text">Images</span>
             </a>
+            <a href="video.html" class="icon-btn menu-item" title="Videos">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                <span class="menu-text">Videos</span>
+            </a>
             <a href="history.html" class="icon-btn menu-item" title="History">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -145,6 +152,15 @@
                     </svg>
                     <span>This chat won't appear in your history and will not be used to train models.</span>
                 </div>
+                
+                <!-- Video Mode Notice -->
+                <div class="image-notice" id="videoNotice" style="display: none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    <span>Video generation mode - Describe the video you want to create</span>
+                </div>
 
                 <!-- Image Mode Notice -->
                 <div class="image-notice" id="imageNotice" style="display: none;">
@@ -166,6 +182,13 @@
                         <polyline points="21 15 16 10 5 21"></polyline>
                     </svg>
                     Create Images
+                </button>
+                <button class="action-btn" id="createVideoBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    Create Videos
                 </button>
             </div>
         </div>

@@ -164,6 +164,8 @@ class VXApi {
             };
         }
     }
+    
+    // Video generation functionality has been removed
 }
 
 // Create global instance

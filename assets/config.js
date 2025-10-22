@@ -3,8 +3,8 @@ const API_CONFIG = {
     // OpenRouter API endpoint
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
     
-    // Fixed API Key - DO NOT CHANGE
-    apiKey: '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',
+    // API Key - Replace with your valid OpenRouter API key
+    apiKey: 'sk-or-v1-...',  // نیاز به جایگزینی با کلید API معتبر از OpenRouter
     
     // Model settings
     model: 'google/gemini-2.0-flash-exp:free',
@@ -18,7 +18,7 @@ const API_CONFIG = {
     
     // OpenRouter specific settings
     siteName: 'VX Chat',
-    siteUrl: window.location.origin || 'https://vx-chat.local'
+    siteUrl: window.location.origin || 'https://vortexcm.github.io/VX_AI'
 };
 
 // Load model from localStorage if user changed it
