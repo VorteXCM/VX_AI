@@ -6,6 +6,11 @@ let sidebarExpanded = false;
 // Mode flags
 let isPrivateMode = false;
 let isImageMode = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Basic initialization
+    console.log('DOM fully loaded');
+});
 // Video mode functionality has been removed
 
 // Check for query parameters on page load
